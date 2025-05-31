@@ -19,12 +19,14 @@ public abstract class PlayerFreeLookState : PlayerStateBase
     {
         //Subscribe to input events
         stateMachine.InputReader.TargetEvent += OnTargetToggle;
+        stateMachine.InputReader.AttackEvent += OnAttack;
     }
 
     public override void Exit()
     {
         //Unsubscribe to inputs upon exit
         stateMachine.InputReader.TargetEvent -= OnTargetToggle;
+        stateMachine.InputReader.AttackEvent -= OnAttack;
     }
 
     private void OnTargetToggle()
@@ -36,6 +38,11 @@ public abstract class PlayerFreeLookState : PlayerStateBase
         if (stateMachine.Targeter.currentTarget == null) return;
         //Switch states if enemies found
         stateMachine.SwitchState(stateMachine.targetingState);
+    }
+
+    private void OnAttack()
+    {
+        stateMachine.SwitchState(new PlayerAttackingState(stateMachine, currentAttack));
     }
 
 }
